@@ -34,75 +34,32 @@ def buildFunc(name='unnamed', param=[], func=['pass'], funcDict=None, **kwargs):
 	for i in func:
 		funcstr = funcstr + '\n\t' + i
 	exec('def ' + name + '(' + paramstr + '):' + funcstr, globals())
-def doLoggedAction(action='pass', defaultLog='Action Performed!', logToScreen=True, logFile=None):
+def doLoggedAction(action, log, iterateMethod='set', logToScreen=True, logFile=None):
+	if not log:
+		log = action
+	assert (logToScreen or logFile), 'Logging is disabled!'
+	assert (isinstance(action, str) or isinstance(action, list) or isinstance(action, tuple)), 'Code not processable!'
 	if logFile:
 		logFile = open(logFile, 'w')
-		logFileText = ''
-	if not logToScreen and logFile == None:
-		return 'Logging is disabled!'
-	if not isinstance(action, str) or not isinstance(action, list) or not isinstance(action, tuple):
-		return 'Code not iterable!'
+	def doLog():
+		if logToScreen:
+			print(log)
+		if logFile:
+			logFile.write(log)
 	if isinstance(action, str):
 		exec(action, globals())
-		if logToScreen:
-			print(defaultLog)
-		if logFile:
-			logFile.write(defaultLog + '\n')
-	elif isinstance(action, list):
-		for i in action:
-			if isinstance(i, tuple):
+		doLog()
+	elif isinstance(action, tuple) or isinstance(action, list):
+		if iterateMethod == 'step':
+			for i in action:
 				exec(i, globals())
-				if logToScreen:
-					print(i[1])
-				if logFile:
-					logFile.write(i[1] + '\n')
-			elif isinstance(i, str):
+				doLog()
+		else:
+			for i in action:
 				exec(i, globals())
-				if logToScreen:
-					print(defaultLog)
-				if logFile:
-					logFile.write(defaultLog + '\n')
-	elif isinstance(action, tuple):
-		if isinstance(action[0], tuple):
-			for i in action[0]:
-				exec(i, globals())
-			if logToScreen:
-				if action[1]:
-					print(action[1])
-				else:
-					print(defaultLog)
-			if logFile:
-				if action[1]:
-					logFile.write(action[1])
-				else:
-					logFile.write(defaultlog)
-		if isinstance(action[0], list):
-			for i in action[0]:
-				exec(i, globals())
-				if logToScreen:
-					if action[1]:
-						print(action[1])
-					else:
-						print(defaultLog)
-				if logFile:
-					if action[1]:
-						logFile.write(action[1])
-					else:
-						logFile.write(defaultLog)
-		if isinstance(action[0], str):
-			exec(action[0], globals())
-			if logToScreen:
-				if action[1]:
-					print(action[1])
-				else:
-					print(defaultLog)
-			if logFile:
-				if action[1]:
-					logFile.write(action[1] + '\n')
-				else:
-					logFile.write(defaultLog + '\n')
-	logFile.close()
-	return
+			doLog()
+	if logFile:
+		logFile.close()
 def clear():
 	try:
 		with os.listdir('.') as temp:
@@ -137,3 +94,41 @@ def replaceLine(file, line, newText):
 	f.writelines(lines)
 	f.close()
 def lineBreakdown(origText, maxLength, outputAsList=True):
+	def raw(self, line):
+		if not isinstance(line, str):
+			return 'Code not processable!'
+		if isinstance(line, str) and line[-2:] == '\n':
+			line = line[:-2]
+		def list(self, line):
+			outLines = ()
+			itemIndex = 0
+			for i in line:
+				if i == '\n':
+					outLines.append(line[:itemIndex])
+					line = line[(itemIndex + 2):]
+					itemIndex = 0
+				else:
+					itemIndex += 1
+					continue
+			if line != '':
+				outLines.append(line)
+			return outLines
+	if len(origText) <= maxLength:
+		return origText
+	outLines = []
+	currentIndex = maxLength - 1
+	while True:
+		if len(origText) <= maxLength:
+			if len(origText) >= 1:
+				outLines.append(origText)
+			return outLines
+		if origText[currentIndex] == ' ' or origText[currentIndex] == '\n':
+			outLines.append(origText[:currentIndex])
+			origText = origText[(currentIndex + 1):]
+			currentIndex = maxLength - 1
+		elif not ('\n' in origText[:(maxLength - 1)]) and not (' ' in origText[:(maxLength - 1)]):
+			outLines.append(origText[:(maxLength - 2)] + '-')
+			origText = origText[(maxLength - 2):]
+			currentIndex = maxLength - 1
+		else:
+			currentIndex -= 1
