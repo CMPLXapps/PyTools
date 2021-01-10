@@ -1,11 +1,6 @@
 nil = None
 null = None
-getFuncParams = lambda func: {"parameters": func.__code__.co_varnames, "count": func.__code__.co_argcount}
-def buildClass(name='unnamed', param=[], func=['pass'], getDict=False, funcDict={}, **kwargs):
-	if getDict:
-		name = funcDict['name']
-		param = funcDict['param']
-		func = funcDict['func']
+def buildClass(name='unnamed', param=[], func=['pass'], **kwargs):
 	if param != []:
 		paramstr = param[0]
 		del param[0]
@@ -18,12 +13,8 @@ def buildClass(name='unnamed', param=[], func=['pass'], getDict=False, funcDict=
 	for i in func:
 		funcstr = funcstr + '\n\t' + i
 	exec('class ' + name + paramstr + funcstr, globals())
-def buildFunc(name='unnamed', param=[], func=['pass'], funcDict=None, **kwargs):
-	if not isinstance(funcDict, dict):
-		name = funcDict['name']
-		param = funcDict['param']
-		func = funcDict['func']
-	if param != []:
+def buildFunc(name='unnamed', param=[], func=['pass'], **kwargs):
+	if param and param != [] and param != '' and param != ():
 		paramstr = param[0]
 		del param[0]
 		for i in param:
@@ -34,7 +25,7 @@ def buildFunc(name='unnamed', param=[], func=['pass'], funcDict=None, **kwargs):
 	for i in func:
 		funcstr = funcstr + '\n\t' + i
 	exec('def ' + name + '(' + paramstr + '):' + funcstr, globals())
-def doLoggedAction(action, log, iterateMethod='set', logToScreen=True, logFile=None):
+def doLoggedAction(action='pass', log='Logged!', iterateMethod='set', logToScreen=True, logFile=None):
 	if not log:
 		log = action
 	assert (logToScreen or logFile), 'Logging is disabled!'
@@ -89,46 +80,49 @@ def replaceLine(file, line, newText):
 	f = open(file, 'r')
 	lines = f.readlines()
 	f.close()
-	lines[line] = newText
+	lines[(line - 1)] = newText + '\n'
 	f = open(file, 'w')
 	f.writelines(lines)
 	f.close()
-def lineBreakdown(origText, maxLength, outputAsList=True):
+class lineBreakdown:
+	def __init__(self):
+		print('raw(), list(), and length() are the attributes in this class.')
 	def raw(self, line):
 		if not isinstance(line, str):
 			return 'Code not processable!'
-		if isinstance(line, str) and line[-2:] == '\n':
-			line = line[:-2]
-		def list(self, line):
-			outLines = ()
-			itemIndex = 0
-			for i in line:
-				if i == '\n':
-					outLines.append(line[:itemIndex])
-					line = line[(itemIndex + 2):]
-					itemIndex = 0
-				else:
-					itemIndex += 1
-					continue
-			if line != '':
-				outLines.append(line)
-			return outLines
-	if len(origText) <= maxLength:
-		return origText
-	outLines = []
-	currentIndex = maxLength - 1
-	while True:
+		if isinstance(line, str) and line[-1] == '\n':
+			line = line[:-1]
+		return line
+	def list(self, line):
+		outLines = []
+		itemIndex = 0
+		for i in line:
+			if i == '\n':
+				outLines.append(line[:itemIndex])
+				line = line[(itemIndex + 1):]
+				itemIndex = 0
+			else:
+				itemIndex += 1
+		if line != '':
+			outLines.append(line)
+		return outLines
+	def length(self, origText, maxLength):
 		if len(origText) <= maxLength:
-			if len(origText) >= 1:
-				outLines.append(origText)
-			return outLines
-		if origText[currentIndex] == ' ' or origText[currentIndex] == '\n':
-			outLines.append(origText[:currentIndex])
-			origText = origText[(currentIndex + 1):]
-			currentIndex = maxLength - 1
-		elif not ('\n' in origText[:(maxLength - 1)]) and not (' ' in origText[:(maxLength - 1)]):
-			outLines.append(origText[:(maxLength - 2)] + '-')
-			origText = origText[(maxLength - 2):]
-			currentIndex = maxLength - 1
-		else:
-			currentIndex -= 1
+			return origText
+		outLines = []
+		currentIndex = maxLength - 1
+		while True:
+			if len(origText) <= maxLength:
+				if len(origText) >= 1:
+					outLines.append(origText)
+				return outLines
+			if origText[currentIndex] == ' ' or origText[currentIndex] == '\n':
+				outLines.append(origText[:currentIndex])
+				origText = origText[(currentIndex + 1):]
+				currentIndex = maxLength - 1
+			elif not ('\n' in origText[:(maxLength - 1)]) and not (' ' in origText[:(maxLength - 1)]):
+				outLines.append(origText[:(maxLength - 2)] + '-')
+				origText = origText[(maxLength - 2):]
+				currentIndex = maxLength - 1
+			else:
+				currentIndex -= 1
