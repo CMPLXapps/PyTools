@@ -1,8 +1,8 @@
 This software is the digital property of myself (cmplxapps), and is to be used alongside 'Python',
 software which is owned and currently contributed to by the Python Software Foundation (PSF).
 
-My intellectual ownership of this software is not officially recognized by any government body, as I
-wish to remain anonymous in the eyes of both the international public and government. By downloading
+My ownership of this software is not officially recognized by any government body, as I wish to 
+remain anonymous in the eyes of both the international public and government. By downloading
 this software, you agree to the following terms:
 
 1) You have my full permission to modify, distribute, or use the software, free of charge, as long as
