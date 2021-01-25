@@ -8,7 +8,7 @@ setuptools.setup(
     version="1.0.0",
     author="cmplxapps",
     author_email="cmplxapps@gmail.com",
-    description="Just a collection of useful tools to make coding a bit easier.",
+    description="Just a collection of useful tools.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://cmplxapps.github.io",
