@@ -6,7 +6,7 @@ Just a collection of useful tools.
 
 To install this, either:
 
-* Download a the source code or one of the releases from this repository, and use it in your project,
+* Download the source code or one of the releases from this repository, and use it in your project,
   or `C:\Users\<YOUR-NAME>\AppData\local\Programs\Python\Python<VERSION>\lib\site_packages`, or
 
 * Use `pip install pytools-ca`
