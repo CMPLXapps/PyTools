@@ -1,0 +1,4 @@
+All credit for development of this specific piece of software goes to me, cmplxapps.
+
+All credit for development and ownership of Python, which this software is meant to
+be used alongside goes to the Python Software Foundation (PSF).
