@@ -1,38 +1,18 @@
+__all__ = ['build', 'bc']
+__version__ = '1.1.0'
+#--------------------------------------------------------------------------------------------------
 nil = None
 null = None
-def buildClass(name='unnamed', param=[], func=['pass'], **kwargs):
-	if param != []:
-		paramstr = param[0]
-		del param[0]
-		for i in param:
-			paramstr = paramstr + ', ' + i
-		paramstr = '(' + paramstr + '):'
-	else:
-		paramstr = ':'
-	funcstr = ''
-	for i in func:
-		funcstr = funcstr + '\n\t' + i
-	exec('class ' + name + paramstr + funcstr, globals())
-def buildFunc(name='unnamed', param=[], func=['pass'], **kwargs):
-	if param and param != [] and param != '' and param != ():
-		paramstr = param[0]
-		del param[0]
-		for i in param:
-			paramstr = paramstr + ', ' + i
-	else:
-		paramstr = ''
-	funcstr = ''
-	for i in func:
-		funcstr = funcstr + '\n\t' + i
-	exec('def ' + name + '(' + paramstr + '):' + funcstr, globals())
-def doLoggedAction(action='pass', log='Logged!', iterateMethod='set', logToScreen=True, logFile=None):
+findKey = lambda keyvalue, dictionary, *args, **kwargs: list(dictionary.keys())[list(dictionary.values()).index(keyvalue)]
+objExists = lambda var, *args, **kwargs: bool(var in globals())
+def doLoggedAction(action='pass', log='Logged!', iterateMethod='set', logToScreen=True, logFile=None, *args, **kwargs):
 	if not log:
 		log = action
 	assert (logToScreen or logFile), 'Logging is disabled!'
 	assert (isinstance(action, str) or isinstance(action, list) or isinstance(action, tuple)), 'Code not processable!'
 	if logFile:
 		logFile = open(logFile, 'w')
-	def doLog():
+	def doLog(*args, **kwargs):
 		if logToScreen:
 			print(log)
 		if logFile:
@@ -51,32 +31,30 @@ def doLoggedAction(action='pass', log='Logged!', iterateMethod='set', logToScree
 			doLog()
 	if logFile:
 		logFile.close()
-def clear():
-	try:
-		with os.listdir('.') as temp:
-			pass
-	except:
+def clear(*args, **kwargs):
+	unimportDossier = {'os': False, 'platform': False}
+	if not (str(os).find('<module ') == 0 and str(os)[-1] == '>')
 		import os
-	try:
-		with platform.system() as temp:
-			pass
-	except:
+		unimportDossier['os'] = True
+	if not (str(platform).find('<module ') == 0 and str(platform)[-1] == '>')
 		import platform
+		unimportDossier['platform'] = True
 	if platform.system() == 'Windows':
 		os.system('cls')
 	else:
 		os.system('clear')
-def systemCheck(acceptedMachinesList=['Windows', 'Darwin', 'Linux']):
-	try:
-		with platform.system() as temp:
-			pass
-	except:
+	if unimportDossier['os']:
+		del os
+	if unimportDossier['platform']:
+		del platform
+def systemCheck(acceptedMachinesList=['Windows', 'Darwin', 'Linux'], *args, **kwargs):
+	unimportDossier = {'os': False, 'platform': False}
+	if not (str(platform).find('<module ') == 0 and str(platform)[-1] == '>')
 		import platform
-	if not platform.system() in accepted_machines:
-		return 'Invalid OS!'
-	else:
-		return 'Valid OS!'
-def replaceLine(file, line, newText):
+		unimportDossier['platform'] = True
+	if unimportDossier['platform']:
+		del platform
+def replaceLine(file, line, newText, *args, **kwargs):
 	f = open(file, 'r')
 	lines = f.readlines()
 	f.close()
@@ -85,7 +63,7 @@ def replaceLine(file, line, newText):
 	f.writelines(lines)
 	f.close()
 class lineBreakdown:
-	def __init__(self):
+	def __init__(self, *args, **kwargs):
 		print('raw(), list(), and length() are the attributes in this class.')
 	def raw(self, line):
 		if not isinstance(line, str):
@@ -93,7 +71,7 @@ class lineBreakdown:
 		if isinstance(line, str) and line[-1] == '\n':
 			line = line[:-1]
 		return line
-	def list(self, line):
+	def list(self, line, *args, **kwargs):
 		outLines = []
 		itemIndex = 0
 		for i in line:
@@ -106,7 +84,7 @@ class lineBreakdown:
 		if line != '':
 			outLines.append(line)
 		return outLines
-	def length(self, origText, maxLength):
+	def length(self, origText, maxLength, *args, **kwargs):
 		if len(origText) <= maxLength:
 			return origText
 		outLines = []
@@ -126,3 +104,8 @@ class lineBreakdown:
 				currentIndex = maxLength - 1
 			else:
 				currentIndex -= 1
+def println(string=''):
+	import sys
+	sys.stdout.write(string)
+def execRequest(code='pass', *args, **kwargs):
+	pass

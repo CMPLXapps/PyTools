@@ -1,0 +1,1 @@
+isimported = lambda module: (str(module).find('<module ') == 0 and str(module)[-1] == '>')
