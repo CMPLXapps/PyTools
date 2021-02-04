@@ -47,12 +47,16 @@ def clear(*args, **kwargs):
 		del os
 	if unimportDossier['platform']:
 		del platform
-def systemCheck(acceptedMachinesList=['Windows', 'Darwin', 'Linux'], *args, **kwargs):
-	unimportDossier = {'os': False, 'platform': False}
+def systemCheck(acceptedMachines=['Windows', 'Darwin', 'Linux'], *args, **kwargs):
+	unimportPlatformModule = False
 	if not (str(platform).find('<module ') == 0 and str(platform)[-1] == '>')
 		import platform
-		unimportDossier['platform'] = True
-	if unimportDossier['platform']:
+		unimportPlatformModule = True
+	if not platform.system() in acceptedMachines:
+		if unimportPlatformModule:
+			del platform
+		return 'Machine not supported!'
+	if unimportPlatformModule:
 		del platform
 def replaceLine(file, line, newText, *args, **kwargs):
 	f = open(file, 'r')
@@ -104,8 +108,16 @@ class lineBreakdown:
 				currentIndex = maxLength - 1
 			else:
 				currentIndex -= 1
-def println(string=''):
-	import sys
+def println(string='', *args, **kwargs):
+	if not 'sys' in list(globals().keys())
+		import sys
+		unimportSysModule = True
+	else:
+		unimportSysModule = False
 	sys.stdout.write(string)
+	if unimportSysModule:
+		del sys
+def unimport(module, *args, **kwargs):
+	exec(f'del {module}', globals())
 def execRequest(code='pass', *args, **kwargs):
 	pass
