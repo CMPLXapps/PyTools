@@ -33,10 +33,10 @@ def doLoggedAction(action='pass', log='Logged!', iterateMethod='set', logToScree
 		logFile.close()
 def clear(*args, **kwargs):
 	unimportDossier = {'os': False, 'platform': False}
-	if not (str(os).find('<module ') == 0 and str(os)[-1] == '>')
+	if not (str(os).find('<module ') == 0 and str(os)[-1] == '>'):
 		import os
 		unimportDossier['os'] = True
-	if not (str(platform).find('<module ') == 0 and str(platform)[-1] == '>')
+	if not (str(platform).find('<module ') == 0 and str(platform)[-1] == '>'):
 		import platform
 		unimportDossier['platform'] = True
 	if platform.system() == 'Windows':
@@ -49,7 +49,7 @@ def clear(*args, **kwargs):
 		del platform
 def systemCheck(acceptedMachines=['Windows', 'Darwin', 'Linux'], *args, **kwargs):
 	unimportPlatformModule = False
-	if not (str(platform).find('<module ') == 0 and str(platform)[-1] == '>')
+	if not (str(platform).find('<module ') == 0 and str(platform)[-1] == '>'):
 		import platform
 		unimportPlatformModule = True
 	if not platform.system() in acceptedMachines:
@@ -109,7 +109,7 @@ class lineBreakdown:
 			else:
 				currentIndex -= 1
 def println(string='', *args, **kwargs):
-	if not 'sys' in list(globals().keys())
+	if not 'sys' in list(globals().keys()):
 		import sys
 		unimportSysModule = True
 	else:
@@ -120,4 +120,28 @@ def println(string='', *args, **kwargs):
 def unimport(module, *args, **kwargs):
 	exec(f'del {module}', globals())
 def execRequest(code='pass', *args, **kwargs):
+	pass
+def getArgs():
+	if not 'sys' in list(globals().keys()):
+		import sys
+		unimportSysModule = True
+	else:
+		unimportSysModule = False
+	if __name__ == '__main__':
+		return tuple(sys.argv[1:])
+	if unimportSysModule:
+		del sys
+class FileObject:
+	pass
+class Printer:
+	class PrintStream:
+		def __init__(self, *args, **kwargs):
+			if 'wait_mode' in list(kwargs.keys()) and kwargs['wait_mode']: self.wait_mode = 
+		def __iadd__(self, other):
+			if hasattr(other, '__iter__') and not isinstance(other, str):
+				for i in other: print(str(i))
+			else: print(str(other))
+	def __init__(self, *args, **kwargs):
+		pass
+class Executioner:
 	pass

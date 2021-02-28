@@ -1,5 +1,5 @@
-class TemporaryImportMirrorObject:
-	class __MirrorInfoAttribute:
+class ImportMirrorObject:
+	class MirrorInfoAttributeType:
 		def __init__(self, string, *args, **kwargs):
 			
 		def __repr__(self, *args, **kwargs):
@@ -15,6 +15,9 @@ class TemporaryImportMirrorObject:
 	def __del__(self, *args, **kwargs):
 		exec(f'del {self.__mirror__}', globals())
 		del self
+	@property
+	def new(self):
+		return ImportMirrorObject()
 	def unimport(self, *args, **kwargs):
 		self.__del__()
 isimported = lambda module: ((str(module).find('<module ') == 0 and str(module)[-1] == '>') and module in list(globals().keys()))
